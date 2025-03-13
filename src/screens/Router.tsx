@@ -1,9 +1,4 @@
-import {
-  BrowserRouter,
-  createBrowserRouter,
-  Route,
-  Routes,
-} from "react-router-dom";
+import { createBrowserRouter } from "react-router-dom";
 
 import Root from "../Root";
 import About from "./About";
@@ -11,6 +6,7 @@ import Home from "./Home";
 import Notfound from "./Notfound";
 import ErrorComponent from "../components/ErrorComponent";
 import User from "./user/User";
+import Followers from "./Followers";
 const router = createBrowserRouter([
   {
     path: "/",
@@ -22,8 +18,14 @@ const router = createBrowserRouter([
         element: <About />,
       },
       {
-        path: "users/:useId",
+        path: "users/:userId",
         element: <User />,
+        children: [
+          {
+            path: "follwers",
+            element: <Followers />,
+          },
+        ],
       },
     ],
     errorElement: <Notfound />,
