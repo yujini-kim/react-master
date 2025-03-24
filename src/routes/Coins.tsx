@@ -1,6 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
-import { useEffect, useState } from "react";
-import { Link, useLocation } from "react-router-dom";
+import { Link } from "react-router-dom";
 import styled from "styled-components";
 import { fetchCoins } from "./api";
 const Container = styled.div`
@@ -63,6 +62,8 @@ function Coins() {
     queryKey: ["allCoins"],
     queryFn: fetchCoins,
   });
+
+  console.log("Fetched Data:", data);
 
   return (
     <Container>

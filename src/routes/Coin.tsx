@@ -1,9 +1,7 @@
-import { useEffect, useState } from "react";
 import { Link, useLocation, useParams } from "react-router-dom";
 import { Switch, Route, useRouteMatch } from "react-router";
 import styled from "styled-components";
 import Price from "./Price";
-
 import Chart from "./Chart";
 import { useQuery } from "@tanstack/react-query";
 import { fetchCoinInfo, fetchCoinTickers } from "./api";
@@ -143,6 +141,7 @@ function Coin() {
   const { isLoading: tickersLoading, data: tickersData } = useQuery<PriceData>({
     queryKey: ["tickers", coinId],
     queryFn: () => fetchCoinTickers(coinId),
+    refetchInterval: 5000,
   });
   const loading = infoLoading || tickersLoading;
   return (
@@ -166,8 +165,8 @@ function Coin() {
               <span>${infoData?.symbol}</span>
             </OverviewItem>
             <OverviewItem>
-              <span>Open Source:</span>
-              <span>{infoData?.open_source ? "Yes" : "No"}</span>
+              <span>Price:</span>
+              <span>{tickersData?.quotes.USD.price}</span>
             </OverviewItem>
           </Overview>
           <Description>{infoData?.description}</Description>
@@ -196,7 +195,7 @@ function Coin() {
               <Price />
             </Route>
             <Route path={`/${coinId}/chart`}>
-              <Chart />
+              <Chart coinId={coinId} />
             </Route>
           </Switch>
         </>
