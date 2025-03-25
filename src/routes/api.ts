@@ -1,7 +1,9 @@
 const BASE_URL = `https://api.coinpaprika.com/v1`;
 
 export async function fetchCoins() {
-  return fetch(`${BASE_URL}/coins`).then((res) => res.json());
+  return fetch(
+    `https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd`
+  ).then((res) => res.json());
 }
 
 export async function fetchCoinInfo(coinId: string) {
