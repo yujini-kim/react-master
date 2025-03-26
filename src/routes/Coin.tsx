@@ -2,11 +2,10 @@ import { Link, useLocation, useParams } from "react-router-dom";
 import { Switch, Route, useRouteMatch } from "react-router";
 import styled from "styled-components";
 import Price from "./Price";
-import Chart from "./Chart";
+
 import { useQuery } from "@tanstack/react-query";
 import { fetchCoins, fetchCoinTickers } from "./api";
 import { Helmet } from "react-helmet";
-import RangeChart from "../Components/RangeChart";
 
 interface RouteParams {
   coinId: string;
@@ -15,6 +14,9 @@ const Container = styled.div`
   padding: 0px 20px;
   max-width: 480px;
   margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
 `;
 const Header = styled.header`
   height: 10vh;
@@ -37,15 +39,15 @@ const InfoBox = styled.div`
 `;
 
 const Rank = styled.div`
-  background-color: #181719;
+  background-color: ${(props) => props.theme.bgColor};
+  border: 1px solid #c0c0c0;
+  box-shadow: inset 0 0 5px rgba(255, 255, 255, 0.05);
   padding: 8px;
   border-radius: 3px;
 `;
 const Name = styled(Rank)``;
 const Icon = styled.div`
   display: flex;
-  align-items: center;
-  justify-content: center;
   font-size: 30px;
   img {
     width: 30px;
@@ -54,15 +56,14 @@ const Icon = styled.div`
 `;
 const CurrentPrice = styled.span`
   font-size: 30px;
-  color: lightgreen;
+  font-weight: 600;
+  color: ${(props) => props.theme.textColor};
 `;
 const PriceChangePercent = styled.div<{ priceChange: number }>`
   background-color: ${(props) =>
     props.priceChange < 0
-      ? "red"
-      : props.priceChange > 0
-      ? "lightgreen"
-      : "gray"};
+      ? props.theme.decreaseColor
+      : props.theme.increaseColor};
   display: flex;
   justify-content: center;
   align-items: center;
@@ -74,17 +75,29 @@ const PriceChangePercent = styled.div<{ priceChange: number }>`
 `;
 const PriceInfo = styled.div`
   display: flex;
-  gap: 50px;
+  gap: 10px;
 `;
 const Img = styled.img`
   width: 15px;
   height: 15px;
   margin-right: 5px;
 `;
-
-const Chart24h = styled.div``;
-
-const High = styled.div``;
+const ExtraInfo = styled.div``;
+const Extra = styled.div`
+  display: flex;
+  justify-content: space-between;
+  font-size: 16px;
+`;
+const ExtraInfoText = styled.span``;
+const ExtraInfoValue = styled.span`
+  font-weight: 600;
+`;
+const StyledHr = styled.hr`
+  border: none;
+  height: 1px;
+  background-color: #d3d3d3;
+  margin: 10px;
+`;
 
 interface RouteState {
   name: string;
@@ -100,6 +113,8 @@ interface PriceData {
   };
   categories: string[];
   market_data: {
+    max_supply: number;
+    total_volume: { bmd: number };
     current_price: {
       bmd: number;
     };
@@ -107,6 +122,9 @@ interface PriceData {
       bmd: number;
     };
     market_cap: {
+      bmd: number;
+    };
+    fully_diluted_valuation: {
       bmd: number;
     };
     total_supply: number;
@@ -123,7 +141,6 @@ interface PriceData {
   last_updated: number;
   market_cap_rank: number;
 }
-
 interface ICoin {
   id: string;
   symbol: string;
@@ -163,13 +180,12 @@ function Coin() {
     queryFn: () => fetchCoinTickers(coinId),
   });
 
-  const { isLoading, data } = useQuery<ICoin[]>({
-    queryKey: ["allCoins"],
-    queryFn: fetchCoins,
-  });
-
+  const formatNumber = (num?: number) => {
+    if (num === undefined || num === null) return "∞";
+    return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+  };
   return (
-    <Container>
+    <>
       <Helmet>
         <title>
           {state?.name
@@ -191,19 +207,18 @@ function Coin() {
       {tickersLoading ? (
         <Loader>Loading...</Loader>
       ) : (
-        <>
+        <Container>
           <InfoBox>
             <Rank>Rank #{tickersData?.market_cap_rank}</Rank>
             <Name>{tickersData?.symbol.toUpperCase()}</Name>
           </InfoBox>
-
+          <Icon>
+            <Img src={tickersData?.image?.thumb} alt={tickersData?.name} />
+            {tickersData?.name}
+          </Icon>
           <PriceInfo>
-            <Icon>
-              <Img src={tickersData?.image?.thumb} alt={tickersData?.name} />
-              {tickersData?.name}
-            </Icon>
             <CurrentPrice>
-              ${tickersData?.market_data.current_price.bmd.toLocaleString()}
+              ${formatNumber(tickersData?.market_data.current_price.bmd)}
             </CurrentPrice>
             <PriceChangePercent
               priceChange={
@@ -213,28 +228,82 @@ function Coin() {
             >
               {tickersData?.market_data.price_change_percentage_24h_in_currency
                 .bmd ?? 0 > 0
-                ? "⮝ "
-                : "⮝ "}
-              {tickersData?.market_data.price_change_percentage_24h_in_currency.bmd.toFixed(
-                1
+                ? "▼"
+                : "▲"}
+              {formatNumber(
+                tickersData?.market_data.price_change_percentage_24h_in_currency
+                  .bmd
+                  ? Number(
+                      tickersData.market_data.price_change_percentage_24h_in_currency.bmd.toFixed(
+                        1
+                      )
+                    )
+                  : undefined
               )}
               %
             </PriceChangePercent>
           </PriceInfo>
-          <Chart24h>
-            <RangeChart />
-          </Chart24h>
+          <ExtraInfo>
+            <Extra>
+              <ExtraInfoText>Market Cap</ExtraInfoText>
+              <ExtraInfoValue>
+                ${formatNumber(tickersData?.market_data.market_cap.bmd)}
+              </ExtraInfoValue>
+            </Extra>
+            <StyledHr />
+            <Extra>
+              <ExtraInfoText>Fully Diluted Valuation</ExtraInfoText>
+              <ExtraInfoValue>
+                $
+                {formatNumber(
+                  tickersData?.market_data.fully_diluted_valuation.bmd
+                )}
+              </ExtraInfoValue>
+            </Extra>
+            <StyledHr />
+            <Extra>
+              <ExtraInfoText>24 Hour Trading Vol</ExtraInfoText>
+              <ExtraInfoValue>
+                ${formatNumber(tickersData?.market_data.total_volume.bmd)}
+              </ExtraInfoValue>
+            </Extra>
+            <StyledHr />
+            <Extra>
+              <ExtraInfoText>Circulating Supply</ExtraInfoText>
+              <ExtraInfoValue>
+                {formatNumber(tickersData?.market_data.circulating_supply)
+                  ? Number(tickersData?.market_data.circulating_supply).toFixed(
+                      0
+                    )
+                  : "N/A"}
+              </ExtraInfoValue>
+            </Extra>
+            <StyledHr />
+            <Extra>
+              <ExtraInfoText>Total Supply</ExtraInfoText>
+              <ExtraInfoValue>
+                {formatNumber(tickersData?.market_data.total_supply)
+                  ? Number(tickersData?.market_data.total_supply).toFixed(0)
+                  : "N/A"}
+              </ExtraInfoValue>
+            </Extra>
+            <StyledHr />
+            <Extra>
+              <ExtraInfoText>Max Supply</ExtraInfoText>
+              <ExtraInfoValue>
+                {formatNumber(tickersData?.market_data.max_supply)}
+              </ExtraInfoValue>
+            </Extra>
+          </ExtraInfo>
+
           <Switch>
             <Route path={`/${coinId}/price`}>
               <Price />
             </Route>
-            <Route path={`/${coinId}/chart`}>
-              <Chart coinId={coinId} />
-            </Route>
           </Switch>
-        </>
+        </Container>
       )}
-    </Container>
+    </>
   );
 }
 

@@ -7,6 +7,7 @@ import { Helmet } from "react-helmet";
 const Container = styled.div`
   padding: 0px 20px;
   margin: 0 auto;
+  align-items: center;
 `;
 const Header = styled.header`
   height: 10vh;
@@ -18,13 +19,15 @@ const CoinsList = styled.ul`
   display: grid;
   grid-template-columns: repeat(5, 200px);
   gap: 10px;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
 `;
 const CoinBox = styled.li`
   padding: 10px;
-  background-color: #181719;
-  border: 1px solid #232323;
-  box-shadow: inset 0 0 5px rgba(255, 255, 255, 0.05),
-    0 2px 10px rgba(0, 0, 0, 0.3);
+  background-color: #f2f2f0;
+  border: 1px solid #c0c0c0;
+  box-shadow: inset 0 0 5px rgba(255, 255, 255, 0.05);
   display: flex;
   flex-direction: column;
   gap: 2px;
@@ -39,7 +42,6 @@ const Coin = styled.div`
 
 const CoinName = styled.div`
   color: ${(props) => props.theme.textColor};
-
   transition: color 0.2s ease-in;
   font-size: 10px;
   display: flex;
@@ -70,9 +72,9 @@ const ChangePercent = styled.span<{ priceChange: number }>`
   font-weight: 600;
   color: ${(props) =>
     props.priceChange < 0
-      ? "red"
+      ? props.theme.increaseColor
       : props.priceChange > 0
-      ? "lightgreen"
+      ? props.theme.decreaseColor
       : "gray"};
 `;
 const Title = styled.h1`
@@ -123,14 +125,17 @@ function Coins() {
     queryKey: ["allCoins"],
     queryFn: fetchCoins,
   });
-
+  const formatNumber = (num: number) => {
+    if (num === null || num === undefined) return "N/A";
+    return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+  };
   return (
     <Container>
       <Helmet>
-        <title>코인</title>
+        <title>지니코인</title>
       </Helmet>
       <Header>
-        <Title>코인</Title>
+        <Title>지니코인</Title>
       </Header>
       {isLoading ? (
         <Loader>Loading...</Loader>
@@ -154,9 +159,9 @@ function Coins() {
                 <CoinPriceChange>
                   <ChangeDollar>
                     $
-                    {Number(
-                      Number(coin.current_price).toFixed(5)
-                    ).toLocaleString()}
+                    {coin.current_price != null
+                      ? formatNumber(coin.current_price)
+                      : "N/A"}
                   </ChangeDollar>
                   <ChangePercent priceChange={coin.price_change_percentage_24h}>
                     {coin.price_change_percentage_24h.toFixed(2)}%

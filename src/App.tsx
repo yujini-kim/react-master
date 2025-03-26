@@ -51,7 +51,7 @@ table {
   box-sizing: border-box
 }
 body {
-  font-family: "Noto Sans KR", "Poppins", sans-serif;
+  font-family: "Poppins", sans-serif;
   background-color:${(props) => props.theme.bgColor};
   color:${(props) => props.theme.textColor};
   line-height: 1;
