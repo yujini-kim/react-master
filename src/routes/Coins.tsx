@@ -16,7 +16,7 @@ const Header = styled.header`
 `;
 const CoinsList = styled.ul`
   display: grid;
-  grid-template-columns: repeat(5, 150px);
+  grid-template-columns: repeat(5, 200px);
   gap: 10px;
 `;
 const CoinBox = styled.li`
@@ -69,7 +69,11 @@ const ChangePercent = styled.span<{ priceChange: number }>`
   font-size: 14px;
   font-weight: 600;
   color: ${(props) =>
-    props.priceChange < 0 ? "red" : props.priceChange > 0 ? "green" : "gray"};
+    props.priceChange < 0
+      ? "red"
+      : props.priceChange > 0
+      ? "lightgreen"
+      : "gray"};
 `;
 const Title = styled.h1`
   color: ${(props) => props.theme.accentColor};
@@ -135,8 +139,8 @@ function Coins() {
           {data?.slice(0, 100).map((coin) => (
             <Link
               to={{
-                pathname: `/${coin.name}`,
-                state: { name: coin.name },
+                pathname: `/${coin.id}`,
+                state: { name: coin.id },
               }}
             >
               <CoinBox key={coin.id}>

@@ -2,9 +2,8 @@ import { createGlobalStyle } from "styled-components";
 import Router from "./Router";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 
-const GlobalStlye = createGlobalStyle`
-@import url('https://fonts.googleapis.com/css2?family=42dot+Sans:wght@300..800&family=Noto+Sans+KR:wght@100..900&display=swap');
-html, body, div, span, applet, object, iframe,
+const GlobalStyle = createGlobalStyle`
+
 h1, h2, h3, h4, h5, h6, p, blockquote, pre,
 a, abbr, acronym, address, big, cite, code,
 del, dfn, em, img, ins, kbd, q, s, samp,
@@ -33,9 +32,6 @@ footer, header, hgroup, main, menu, nav, section {
 *[hidden] {
     display: none;
 }
-body {
-  line-height: 1;
-}
 menu, ol, ul {
   list-style: none;
 }
@@ -55,9 +51,10 @@ table {
   box-sizing: border-box
 }
 body {
-  font-family:"Noto Sans KR", sans-serif;
+  font-family: "Noto Sans KR", "Poppins", sans-serif;
   background-color:${(props) => props.theme.bgColor};
-  color:${(props) => props.theme.textColor}
+  color:${(props) => props.theme.textColor};
+  line-height: 1;
 }
 a{
   text-decoration:none;
@@ -67,7 +64,7 @@ a{
 function App() {
   return (
     <>
-      <GlobalStlye />
+      <GlobalStyle />
       <Router />
       <ReactQueryDevtools initialIsOpen={true} />
     </>
