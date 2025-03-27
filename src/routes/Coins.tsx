@@ -26,8 +26,8 @@ const CoinsList = styled.ul`
 `;
 const CoinBox = styled.li`
   padding: 10px;
-  background-color: #f2f2f0;
-  border: 1px solid #c0c0c0;
+  background-color: ${(props) => props.theme.coinGridColor};
+  border: 1px solid ${(props) => props.theme.coinGridBorder};
   box-shadow: inset 0 0 5px rgba(255, 255, 255, 0.05);
   display: flex;
   flex-direction: column;
