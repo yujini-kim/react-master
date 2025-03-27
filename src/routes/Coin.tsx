@@ -59,14 +59,6 @@ const Rank = styled.div`
   border-radius: 3px;
 `;
 const Name = styled(Rank)``;
-const Icon = styled.div`
-  display: flex;
-  font-size: 30px;
-  img {
-    width: 30px;
-    height: 30px;
-  }
-`;
 
 const PriceChangePercent = styled.div<{ priceChange: number }>`
   background-color: ${(props) =>
@@ -195,6 +187,7 @@ function Coin() {
             <Coinicon
               path={tickersData?.image?.thumb}
               name={tickersData?.name}
+              fontSize="30px"
             />
             <PriceInfo>
               <CurrentPrice

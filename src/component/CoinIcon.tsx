@@ -8,23 +8,34 @@ const Icon = styled.div`
     height: 30px;
   }
 `;
+
 const Img = styled.img`
-  width: 15px;
-  height: 15px;
+  width: 10px;
+  height: 10px;
   margin-right: 5px;
+`;
+
+const Name = styled.div<{ fontSize: string }>`
+  font-size: ${(props) => props.fontSize};
 `;
 
 interface IIMG {
   path?: string;
   name?: string;
+  fontSize?: string;
 }
 
-export default function Coinicon({ path, name }: IIMG) {
+export default function Coinicon({
+  path,
+  name,
+
+  fontSize = "16px",
+}: IIMG) {
   return (
     <>
       <Icon>
         <Img src={path} alt={name} />
-        {name}
+        <Name fontSize={fontSize}>{name}</Name>
       </Icon>
     </>
   );

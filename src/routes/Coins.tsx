@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import styled from "styled-components";
 import { fetchCoins, fetchCoinTickers } from "./api";
 import { Helmet } from "react-helmet";
+import Coinicon from "../component/CoinIcon";
 
 const Container = styled.div`
   padding: 0px 20px;

@@ -31,8 +31,8 @@ function Chart({ coinId }: ChartProps) {
               mode: "dark",
             },
             chart: {
-              height: 300,
-              width: 500,
+              height: 500,
+              width: 800,
               toolbar: {
                 show: false,
               },
@@ -47,8 +47,8 @@ function Chart({ coinId }: ChartProps) {
               show: false,
             },
             xaxis: {
-              axisBorder: { show: true },
-              axisTicks: { show: true },
+              axisBorder: { show: false },
+              axisTicks: { show: false },
               labels: {
                 show: true,
                 formatter: (value) =>
