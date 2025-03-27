@@ -120,7 +120,11 @@ interface ICoin {
   atl_date: number;
   last_updated: number;
 }
-function Coins() {
+
+interface ICoinsProps {
+  toggleDark: () => void;
+}
+function Coins({ toggleDark }: ICoinsProps) {
   const { isLoading, data } = useQuery<ICoin[]>({
     queryKey: ["allCoins"],
     queryFn: fetchCoins,
@@ -136,6 +140,7 @@ function Coins() {
       </Helmet>
       <Header>
         <Title>지니코인</Title>
+        <button onClick={toggleDark}>Toggle Dark Mode</button>
       </Header>
       {isLoading ? (
         <Loader>Loading...</Loader>
