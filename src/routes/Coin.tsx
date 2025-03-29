@@ -1,23 +1,23 @@
 import { Link, useLocation, useParams } from "react-router-dom";
 import { Switch, Route, useRouteMatch } from "react-router";
 import styled from "styled-components";
-import Price from "./Price";
-
 import { useQuery } from "@tanstack/react-query";
-import { fetchCoins, fetchCoinTickers } from "./api";
+import { fetchCoinTickers } from "./api";
 import { Helmet } from "react-helmet";
 import Chart from "./Chart";
-import CoinExtraInfo from "../component/CoinExtraInfo";
 import Coinicon from "../component/CoinIcon";
 import CurrentPrice from "../component/CurrentPrice";
+import PercentBox from "../component/PercentBox";
+import PriceList from "../component/PriceList";
 
 interface RouteParams {
   coinId: string;
 }
 const Container = styled.div`
   display: flex;
-  justify-content: center;
-  gap: 200px;
+  align-items: center;
+  margin-top: 50px;
+  flex-direction: column;
 `;
 const CoinInfo = styled.div`
   width: 400px;
@@ -31,16 +31,7 @@ const ChartContainer = styled.div`
   align-items: center;
   justify-content: center;
 `;
-const Header = styled.header`
-  height: 10vh;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-`;
-const Title = styled.h1`
-  color: ${(props) => props.theme.accentColor};
-  font-size: 48px;
-`;
+
 const Loader = styled.span`
   text-align: center;
   display: block;
@@ -60,26 +51,10 @@ const Rank = styled.div`
 `;
 const Name = styled(Rank)``;
 
-const PriceChangePercent = styled.div<{ priceChange: number }>`
-  background-color: ${(props) =>
-    props.priceChange > 0
-      ? props.theme.decreaseColor
-      : props.theme.increaseColor};
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  text-align: center;
-  font-weight: 600;
-  color: black;
-  padding: 5px;
-  border-radius: 5px;
-`;
 const PriceInfo = styled.div`
   display: flex;
   gap: 10px;
 `;
-const ExtraInfo = styled.div``;
-
 interface RouteState {
   name: string;
 }
@@ -134,27 +109,6 @@ function Coin() {
     queryFn: () => fetchCoinTickers(coinId),
   });
 
-  const formatNumber = (num?: number) => {
-    if (num === undefined || num === null) return "∞";
-    return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-  };
-  const extraInfoData = [
-    { text: "Market Cap", value: tickersData?.market_data.market_cap.bmd },
-    {
-      text: "Fully Diluted Valuation",
-      value: tickersData?.market_data.fully_diluted_valuation.bmd,
-    },
-    {
-      text: "24 Hour Trading Vol",
-      value: tickersData?.market_data.total_volume.bmd,
-    },
-    {
-      text: "Circulating Supply",
-      value: tickersData?.market_data.circulating_supply,
-    },
-    { text: "Total Supply", value: tickersData?.market_data.total_supply },
-    { text: "Max Supply", value: tickersData?.market_data.max_supply },
-  ];
   return (
     <>
       <Helmet>
@@ -166,15 +120,7 @@ function Coin() {
             : tickersData?.name}
         </title>
       </Helmet>
-      <Header>
-        <Title>
-          {state?.name
-            ? state.name
-            : tickersLoading
-            ? "Loading..."
-            : tickersData?.name.toUpperCase()}
-        </Title>
-      </Header>
+
       {tickersLoading ? (
         <Loader>Loading...</Loader>
       ) : (
@@ -191,37 +137,18 @@ function Coin() {
             />
             <PriceInfo>
               <CurrentPrice
+                fontsize="38px"
+                fontWeight={600}
                 price={tickersData?.market_data.current_price.bmd}
               />
-
-              <PriceChangePercent
+              <PercentBox
                 priceChange={
                   tickersData?.market_data
                     .price_change_percentage_24h_in_currency.bmd ?? 0
                 }
-              >
-                {tickersData?.market_data
-                  .price_change_percentage_24h_in_currency.bmd ?? 0 > 0
-                  ? "▼"
-                  : "▲"}
-                {formatNumber(
-                  tickersData?.market_data
-                    .price_change_percentage_24h_in_currency.bmd
-                    ? Number(
-                        tickersData.market_data.price_change_percentage_24h_in_currency.bmd.toFixed(
-                          1
-                        )
-                      )
-                    : undefined
-                )}
-                %
-              </PriceChangePercent>
+              />
             </PriceInfo>
-            <ExtraInfo>
-              {extraInfoData.map((info, index) => (
-                <CoinExtraInfo key={index} text={info.text} data={info.value} />
-              ))}
-            </ExtraInfo>
+            <PriceList />
           </CoinInfo>
           <ChartContainer>
             <Chart coinId={coinId} />

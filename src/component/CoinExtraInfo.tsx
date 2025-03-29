@@ -26,7 +26,6 @@ export default function CoinExtraInfo({ text, data }: Props) {
   };
   return (
     <>
-      {" "}
       <Container>
         <Text>{text}</Text>
         <Value>${formatNumber(data)}</Value>

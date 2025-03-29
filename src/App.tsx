@@ -77,9 +77,10 @@ function App() {
         <GlobalStyle />
 
         <Navbar />
-        <div style={{ display: "flex", marginLeft: "250px" }}>
+        <div style={{ marginLeft: "250px" }}>
           <Router />
         </div>
+
         <ReactQueryDevtools initialIsOpen={true} />
       </ThemeProvider>
     </>

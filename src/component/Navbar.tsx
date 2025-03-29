@@ -3,7 +3,7 @@ import { useSetRecoilState } from "recoil";
 import styled from "styled-components";
 import { isDarkAtom } from "../atoms";
 
-const Text = styled.h1``;
+const Text = styled.a``;
 const Container = styled.div`
   position: fixed;
   top: 0;
@@ -56,7 +56,7 @@ export default function Navbar() {
 
   return (
     <Container>
-      <Text>JINI CRYTO</Text>
+      <Text href="/">JINI CRYPTO</Text>
       <Toggle id="toggle" onClick={onClick}></Toggle>
       <ToggleSwitch toggle={click} htmlFor="toggle">
         <Button toggle={click}></Button>
