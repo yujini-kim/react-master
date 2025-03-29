@@ -9,7 +9,6 @@ import { isDarkAtom } from "../atoms";
 const Container = styled.div`
   padding: 0px 20px;
   margin: 0 auto;
-  align-items: center;
 `;
 const Header = styled.header`
   height: 10vh;
@@ -21,9 +20,6 @@ const CoinsList = styled.ul`
   display: grid;
   grid-template-columns: repeat(5, 200px);
   gap: 10px;
-  flex-wrap: wrap;
-  justify-content: center;
-  align-items: center;
 `;
 const CoinBox = styled.li`
   padding: 10px;
@@ -139,10 +135,7 @@ function Coins() {
       <Helmet>
         <title>지니코인</title>
       </Helmet>
-      <Header>
-        <Title>지니코인</Title>
-        <button onClick={toggleDarkAtom}>Toggle Mode</button>
-      </Header>
+
       {isLoading ? (
         <Loader>Loading...</Loader>
       ) : (

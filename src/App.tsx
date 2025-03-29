@@ -2,9 +2,9 @@ import { createGlobalStyle, ThemeProvider } from "styled-components";
 import Router from "./Router";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import { lightTheme, darkTheme } from "./theme";
-import { useState } from "react";
 import { useRecoilValue } from "recoil";
 import { isDarkAtom } from "./atoms";
+import Navbar from "./component/Navbar";
 
 const GlobalStyle = createGlobalStyle`
 
@@ -54,12 +54,15 @@ table {
 * {
   box-sizing: border-box
 }
-body {
-  font-family: "Poppins", sans-serif;
-  background-color:${(props) => props.theme.bgColor};
-  color:${(props) => props.theme.textColor};
-  line-height: 1;
-}
+html, body, #root {
+    height: 100%; 
+  }
+  body {
+    background-color:${(props) => props.theme.bgColor};
+    color:${(props) => props.theme.textColor};
+    line-height: 1;
+    margin: 0;
+  }
 a{
   text-decoration:none;
   color:inherit
@@ -71,7 +74,11 @@ function App() {
     <>
       <ThemeProvider theme={isDark ? darkTheme : lightTheme}>
         <GlobalStyle />
-        <Router />
+
+        <Navbar />
+        <div style={{ display: "flex", marginLeft: "250px" }}>
+          <Router />
+        </div>
         <ReactQueryDevtools initialIsOpen={true} />
       </ThemeProvider>
     </>
