@@ -7,7 +7,7 @@ import { isDarkAtom } from "./atoms";
 import Navbar from "./component/Navbar";
 
 const GlobalStyle = createGlobalStyle`
-
+  
 h1, h2, h3, h4, h5, h6, p, blockquote, pre,
 a, abbr, acronym, address, big, cite, code,
 del, dfn, em, img, ins, kbd, q, s, samp,
@@ -58,6 +58,7 @@ html, body, #root {
     height: 100%; 
   }
   body {
+    font-family: 'Poppins', sans-serif;
     background-color:${(props) => props.theme.bgColor};
     color:${(props) => props.theme.textColor};
     line-height: 1;

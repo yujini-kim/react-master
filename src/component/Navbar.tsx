@@ -56,7 +56,7 @@ export default function Navbar() {
 
   return (
     <Container>
-      <Text>지니코인</Text>
+      <Text>JINI CRYTO</Text>
       <Toggle id="toggle" onClick={onClick}></Toggle>
       <ToggleSwitch toggle={click} htmlFor="toggle">
         <Button toggle={click}></Button>
